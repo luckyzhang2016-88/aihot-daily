@@ -188,11 +188,11 @@ def backfill_times(report):
 # --------------------------------------------------------------------------
 CSS = """
   :root{
-    --teal:#2BB6A3;--teal-dark:#1F8C7E;--teal-soft:#E6F7F5;--teal-line:#BFE9E3;
-    --ink:#14302E;--ink-2:#3D5C58;--ink-3:#7A9490;--line:#E4EDEC;--bg:#F5FAF9;--card:#fff;
-    --model:#2BB6A3;--product:#4A90D9;--industry:#E8833A;--paper:#9B6BC9;--insight:#D9536B;
+    --teal:#E8833A;--teal-dark:#C06A1C;--teal-soft:#FCEDE0;--teal-line:#F3D8C3;
+    --ink:#332318;--ink-2:#5C4736;--ink-3:#9A8472;--line:#F1E3D7;--bg:#FFF9F3;--card:#fff;
+    --model:#E8833A;--product:#4A90D9;--industry:#E0A52E;--paper:#9B6BC9;--insight:#D9536B;
     --radius:16px;--shadow:0 1px 2px rgba(20,48,46,.04),0 8px 24px rgba(20,48,46,.06);
-    --shadow-hi:0 4px 8px rgba(20,48,46,.06),0 18px 40px rgba(43,182,163,.16);
+    --shadow-hi:0 4px 8px rgba(20,48,46,.06),0 18px 40px rgba(232,131,58,.16);
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth;scroll-padding-top:92px}
@@ -202,18 +202,18 @@ CSS = """
     "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif}
   a{color:inherit}
   .wrap{max-width:1180px;margin:0 auto;padding:0 20px 64px}
-  .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#EAF9F6 0%,#F3FBF9 45%,#fff 100%);
+  .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#FDEEE2 0%,#FCF4EC 45%,#fff 100%);
     border-bottom:1px solid var(--line)}
   .hero::after{content:"";position:absolute;right:-140px;top:-160px;width:460px;height:460px;border-radius:50%;
-    background:radial-gradient(circle,rgba(43,182,163,.16) 0%,rgba(43,182,163,0) 70%)}
+    background:radial-gradient(circle,rgba(232,131,58,.16) 0%,rgba(232,131,58,0) 70%)}
   .hero-inner{max-width:1180px;margin:0 auto;padding:44px 20px 30px;position:relative;z-index:1}
   .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;
     color:var(--teal-dark);background:#fff;border:1px solid var(--teal-line);padding:5px 12px;
     border-radius:999px;font-weight:600}
   .kicker .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);
     animation:pulse 2.2s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(43,182,163,.45)}70%{box-shadow:0 0 0 9px rgba(43,182,163,0)}
-    100%{box-shadow:0 0 0 0 rgba(43,182,163,0)}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(232,131,58,.45)}70%{box-shadow:0 0 0 9px rgba(232,131,58,0)}
+    100%{box-shadow:0 0 0 0 rgba(232,131,58,0)}}
   h1{font-size:34px;line-height:1.25;margin:16px 0 6px;letter-spacing:-.01em}
   h1 .accent{color:var(--teal-dark)}
   .hero-date{font-size:16px;color:var(--ink-2);font-weight:600}
