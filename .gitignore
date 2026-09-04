@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+
+# 部署产物由 Actions 生成，不必入库（Pages 用 artifact，不走 git）
+dist/
+
+.DS_Store

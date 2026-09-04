@@ -1,0 +1,73 @@
+name: 每日 AI 晨报
+
+on:
+  schedule:
+    # 北京时间 09:00（GitHub Actions 的 cron 用 UTC，09:00 CST = 01:00 UTC）
+    - cron: "0 1 * * *"
+  workflow_dispatch: # 允许在 Actions 页面手动点一次
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: aihot-daily-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 生成晨报
+        run: |
+          mkdir -p dist archive
+          TODAY=$(TZ=Asia/Shanghai date +%Y-%m-%d)
+          echo "DATE=$TODAY" >> "$GITHUB_ENV"
+          python3 scripts/generate_daily.py -o dist/index.html
+          cp dist/index.html "archive/aihot-daily-$TODAY.html"
+
+      - name: 归档历史
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add archive
+          if git diff --staged --quiet; then
+            echo "归档无变化，跳过提交"
+          else
+            git commit -m "chore: 归档 $DATE 晨报 [skip ci]"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME:-main}"
+            git push
+          fi
+
+      - name: 邮件推送（需先配置 SMTP secrets）
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          MAIL_SUBJECT: "AI 晨报 ${{ env.DATE }}"
+        run: python3 scripts/send_mail.py dist/index.html
+        continue-on-error: true # 邮件失败不应让 Pages 部署挂掉
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
