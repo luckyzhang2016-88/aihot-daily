@@ -111,13 +111,34 @@ Secrets 是运行时注入的，改完不会自动重跑。去 **Actions** → �
 
 ## 三、本地也能跑
 
+只依赖 Python 标准库，**无需 `pip install`**。直接 `python3 xx.py` 即可
+
 ```bash
-python3 scripts/generate_daily.py            # 今天
-python3 scripts/generate_daily.py 2026-09-04 # 指定日期
-python3 scripts/generate_daily.py -o out.html
+cd aihot-daily-repo
+
+# 1) 生成今天的晨报（默认输出到 aihot-daily-YYYY-MM-DD.html，日期按北京时间）
+python3 scripts/generate_daily.py
+
+# 2) 指定某一天
+python3 scripts/generate_daily.py 2026-09-04
+
+# 3) 指定 HTML 输出路径，并一并生成微信摘要 Markdown
+python3 scripts/generate_daily.py -o dist/index.html --summary-out dist/summary.md
+
+# 4) 本地发邮件（需先 export SMTP 变量，缺任一则自动跳过、不报错）
+export SMTP_HOST=smtp.qq.com SMTP_PORT=465 SMTP_USER=565063858@qq.com SMTP_PASS=授权码 MAIL_TO=565063858@qq.com
+python3 scripts/send_mail.py dist/index.html
+
+# 5) 本地推到微信（Server酱，需先 export SendKey，缺则自动跳过）
+export SERVERCHAN_SENDKEY=SCTxxxx
+python3 scripts/send_wechat.py dist/summary.md
 ```
 
-只依赖 Python 标准库，无需 pip install。
+几点说明：
+
+- **生成类脚本需要联网**拉取 AI HOT 接口；`send_mail.py` / `send_wechat.py` 不会单独抓数，依赖前面已生成的 HTML / 摘要文件。
+- 发信两步一般交给云端 workflow 跑即可，本地主要用于**调试发信配置**（看变量名/授权码对不对）。
+- 想看效果、不配 SMTP：只跑第 1~3 步就够，`dist/index.html` 双击或拖进浏览器即可预览。
 
 ---
 
