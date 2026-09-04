@@ -30,7 +30,7 @@ jobs:
           mkdir -p dist archive
           TODAY=$(TZ=Asia/Shanghai date +%Y-%m-%d)
           echo "DATE=$TODAY" >> "$GITHUB_ENV"
-          python3 scripts/generate_daily.py -o dist/index.html
+          python3 scripts/generate_daily.py -o dist/index.html --summary-out dist/summary.md
           cp dist/index.html "archive/aihot-daily-$TODAY.html"
 
       - name: 归档历史
@@ -56,6 +56,13 @@ jobs:
           MAIL_SUBJECT: "AI 晨报 ${{ env.DATE }}"
         run: python3 scripts/send_mail.py dist/index.html
         continue-on-error: true # 邮件失败不应让 Pages 部署挂掉
+
+      - name: 推送到微信（Server酱，可选）
+        env:
+          SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
+          PAGES_URL: https://luckyzhang2016-88.github.io/aihot-daily/
+        run: python3 scripts/send_wechat.py dist/summary.md
+        continue-on-error: true # 微信未配置/失败不应影响邮件与 Pages
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

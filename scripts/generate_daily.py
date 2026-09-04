@@ -13,6 +13,7 @@ Stdlib only, so it runs identically on a laptop and inside GitHub Actions.
 import argparse
 import datetime as dt
 import html
+import os
 import json
 import re
 import sys
@@ -518,10 +519,53 @@ def render(report, date_str, fell_back):
 """
 
 
+def summary_markdown(report, date_str, fell_back, pages_url):
+    """A compact Markdown digest for push channels that can't render full HTML (e.g. WeChat)."""
+    ref_date = dt.date.fromisoformat(date_str)
+    buckets = {s: [] for s in SECTIONS}
+    for sec in report.get("sections", []):
+        buckets.setdefault(sec["label"], []).extend(sec["items"])
+    for label in [k for k in buckets if k not in SECTIONS]:
+        buckets.setdefault("技巧与观点", []).extend(buckets.pop(label))
+
+    cards = {s: [] for s in SECTIONS}
+    n = 0
+    for s in SECTIONS:
+        for it in buckets.get(s, []):
+            n += 1
+            cards[s].append((n, it))
+    total = n
+
+    lines = [f"# AI 晨报 · {date_str}", ""]
+    parts = [f"{s} {len(cards[s])}" for s in SECTIONS if cards[s]]
+    lines.append(f"共 **{total}** 条 · {' / '.join(parts)}")
+    lines.append("")
+    lines.append("## 今日要点")
+    for s in SECTIONS:
+        items = cards[s]
+        if not items:
+            continue
+        lines.append(f"**{s}**")
+        for num, it in items:
+            title = (it.get("title") or "").strip()
+            src = (it.get("source") or {}).get("name", "未标注来源")
+            lines.append(f"- **[{num:02d}]** {title} · 来源：{src}")
+        lines.append("")
+    lines.append(f"> 完整橙色仪表盘（含全部 {total} 条与原文链接）：")
+    lines.append(f"> {pages_url}")
+    lines.append("")
+    lines.append(f"数据来源：AI HOT 日报 · {date_str}")
+    if fell_back:
+        lines.append("")
+        lines.append(f"⚠️ 当天日报尚未生成，本期为最近一期（{report.get('date')}）。")
+    return "\n".join(lines)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Generate an AI HOT daily HTML dashboard.")
     ap.add_argument("date", nargs="?", help="YYYY-MM-DD (default: today in Asia/Shanghai)")
     ap.add_argument("-o", "--out", help="output HTML path")
+    ap.add_argument("--summary-out", help="also write a Markdown summary (for WeChat push)")
     args = ap.parse_args()
 
     date_str = args.date or dt.datetime.now(BEIJING).strftime("%Y-%m-%d")
@@ -536,6 +580,14 @@ def main():
     doc = render(report, used_date, fell_back)
     with open(out, "w", encoding="utf-8") as f:
         f.write(doc)
+
+    if args.summary_out:
+        pages = os.environ.get("PAGES_URL",
+                                "https://luckyzhang2016-88.github.io/aihot-daily/")
+        md = summary_markdown(report, used_date, fell_back, pages)
+        with open(args.summary_out, "w", encoding="utf-8") as f:
+            f.write(md)
+        print(f"OK {args.summary_out}")
 
     counts = {s: 0 for s in SECTIONS}
     for sec in report.get("sections", []):

@@ -51,7 +51,7 @@ https://<你的用户名>.github.io/aihot-daily/
 #### 点击路径
 
 仓库首页 → **Settings**（顶部标签栏最后一个）→ 左侧栏 **Secrets and variables → Actions**
-→ 右上角 **New repository secret** → 填 Name 和 Secret → Add secret。5 个各加一次。
+→ 右上角 **New repository secret** → 填 Name 和 Secret → Add secret。各加一次。
 
 #### QQ 邮箱的 SMTP_PASS 怎么拿
 
@@ -68,6 +68,24 @@ https://<你的用户名>.github.io/aihot-daily/
 
 Secrets 是运行时注入的，改完不会自动重跑。去 **Actions** → 「每日 AI 晨报」→ **Run workflow**
 手动触发一次，确认邮箱能收到，再等第二天自动跑。
+
+### 3b. 推送到微信（Server酱，可选）
+
+想要每天把晨报**推到个人微信**，用 [Server酱（方糖）](https://sct.ftqq.com)：
+
+1. 用微信扫码登录 sct.ftqq.com，拿到 **SendKey**（形如 `SCTxxxxxxxx`）。
+2. 仓库 → **Settings → Secrets and variables → Actions → New repository secret**，加 1 个：
+
+| Secret | 说明 | 举例 |
+|---|---|---|
+| `SERVERCHAN_SENDKEY` | Server酱 SendKey | `SCTabcd1234efgh` |
+
+3. 微信里关注「方糖」「Server酱」服务号（或按官网绑定企业微信）， thereafter 推送会直接到你的微信。
+
+**注意**：微信聊天里**不渲染完整 HTML 仪表盘**，所以推到微信的是一份 **Markdown 摘要**（今日要点 + 全部条目来源 + 完整仪表盘链接）。
+点链接在微信内置浏览器里打开，就是完整的橙色仪表盘。免费版 Server酱 有每日推送额度（约 5 条/天），每天 1 条晨报完全够用。
+
+`SERVERCHAN_SENDKEY` 没配时，微信步骤自动跳过，邮件与 Pages 不受影响。
 
 ### 4. 试跑一次
 
