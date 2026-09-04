@@ -9,21 +9,18 @@
 
 ## 一、落地步骤（约 5 分钟）
 
-### 1. 建仓库并推代码
+### 1. 推代码到已有仓库
 
-在 <https://github.com/new> 建一个 **Public** 仓库（免费账号的 Pages 需要 public），名字随意，比如 `aihot-daily`。
-**不要**勾选 Initialize（下面用本地目录直接推）。
-
-然后在本目录执行：
+仓库 <https://github.com/luckyzhang2016-88/aihot-daily> 已建好（含 GitHub 自动生成的初始 README）。
+本目录已是一个 git 仓库、已提交，领先 `origin/main` 一个提交，直接推送即可：
 
 ```bash
 cd aihot-daily-repo
-git init -b main
-git add -A
-git commit -m "feat: 每日 AI 晨报自动化"
-git remote add origin git@github.com:<你的用户名>/aihot-daily.git
 git push -u origin main
 ```
+
+推送时若弹出登录：**用户名**填 `luckyzhang2016-88`，**密码**填一个 **Personal Access Token**
+（不是 GitHub 登录密码；在 GitHub → Settings → Developer settings → Personal access tokens 生成一个带 `repo` 权限的 token）。
 
 ### 2. 开启 GitHub Pages
 
