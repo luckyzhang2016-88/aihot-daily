@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 晨报 · 2026-09-30 · AI HOT 日报</title>
+<style>
+  :root{
+    --teal:#E8833A;--teal-dark:#C06A1C;--teal-soft:#FCEDE0;--teal-line:#F3D8C3;
+    --ink:#332318;--ink-2:#5C4736;--ink-3:#9A8472;--line:#F1E3D7;--bg:#FFF9F3;--card:#fff;
+    --model:#E8833A;--product:#4A90D9;--industry:#E0A52E;--paper:#9B6BC9;--insight:#D9536B;
+    --radius:16px;--shadow:0 1px 2px rgba(20,48,46,.04),0 8px 24px rgba(20,48,46,.06);
+    --shadow-hi:0 4px 8px rgba(20,48,46,.06),0 18px 40px rgba(232,131,58,.16);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:92px}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    font-family:"Sarasa Gothic SC","Sarasa Gothic",-apple-system,BlinkMacSystemFont,
+    "PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px 64px}
+  .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#FDEEE2 0%,#FCF4EC 45%,#fff 100%);
+    border-bottom:1px solid var(--line)}
+  .hero::after{content:"";position:absolute;right:-140px;top:-160px;width:460px;height:460px;border-radius:50%;
+    background:radial-gradient(circle,rgba(232,131,58,.16) 0%,rgba(232,131,58,0) 70%)}
+  .hero-inner{max-width:1180px;margin:0 auto;padding:44px 20px 30px;position:relative;z-index:1}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.14em;
+    color:var(--teal-dark);background:#fff;border:1px solid var(--teal-line);padding:5px 12px;
+    border-radius:999px;font-weight:600}
+  .kicker .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);
+    animation:pulse 2.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(232,131,58,.45)}70%{box-shadow:0 0 0 9px rgba(232,131,58,0)}
+    100%{box-shadow:0 0 0 0 rgba(232,131,58,0)}}
+  h1{font-size:34px;line-height:1.25;margin:16px 0 6px;letter-spacing:-.01em}
+  h1 .accent{color:var(--teal-dark)}
+  .hero-date{font-size:16px;color:var(--ink-2);font-weight:600}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:13px;color:var(--ink-3)}
+  .hero-meta b{color:var(--ink-2);font-weight:600}
+  .hero-total{display:inline-flex;align-items:baseline;gap:8px;margin-top:20px;background:#fff;
+    border:1px solid var(--line);border-radius:14px;padding:12px 20px;box-shadow:var(--shadow)}
+  .hero-total .big{font-size:40px;font-weight:700;color:var(--teal-dark);line-height:1}
+  .hero-total .lbl{font-size:13px;color:var(--ink-3)}
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:24px}
+  .stat-card{display:block;text-decoration:none;background:#fff;border:1px solid var(--line);
+    border-radius:var(--radius);padding:14px 14px 12px;box-shadow:var(--shadow);
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:var(--teal-line)}
+  .stat-card.is-empty{opacity:.62;background:#FCFEFE}
+  .stat-top{display:flex;align-items:center;gap:7px}
+  .stat-name{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .stat-num{font-size:26px;font-weight:700;margin-top:6px;line-height:1.1}
+  .stat-unit{font-size:12px;font-weight:500;color:var(--ink-3);margin-left:3px}
+  .stat-bar{height:4px;background:#EEF5F4;border-radius:999px;margin:8px 0 7px;overflow:hidden}
+  .stat-bar i{display:block;height:100%;border-radius:999px;background:var(--teal)}
+  .stat-foot{font-size:11.5px;color:var(--ink-3);line-height:1.5}
+  .stat-dot,.sec-dot,.nav-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+  .d-model{background:var(--model)}.d-product{background:var(--product)}
+  .d-industry{background:var(--industry)}.d-paper{background:var(--paper)}.d-insight{background:var(--insight)}
+  .nav{position:sticky;top:0;z-index:20;background:rgba(245,250,249,.88);
+    backdrop-filter:saturate(1.6) blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;gap:8px;
+    overflow-x:auto;scrollbar-width:none}
+  .nav-inner::-webkit-scrollbar{display:none}
+  .nav-chip{display:inline-flex;align-items:center;gap:7px;flex:none;text-decoration:none;font-size:13px;
+    font-weight:600;color:var(--ink-2);background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:7px 13px;transition:all .16s ease;white-space:nowrap}
+  .nav-chip:hover{border-color:var(--teal-line);color:var(--teal-dark)}
+  .nav-chip.is-empty{opacity:.55}
+  .nav-chip.active{background:var(--teal);border-color:var(--teal);color:#fff}
+  .nav-chip.active .nav-dot{background:#fff!important}
+  .nav-count{font-size:11px;font-weight:700;background:#EEF5F4;color:var(--ink-2);border-radius:999px;
+    padding:1px 7px;min-width:20px;text-align:center}
+  .nav-chip.active .nav-count{background:rgba(255,255,255,.24);color:#fff}
+  .sec{padding-top:38px}
+  .sec-head{margin-bottom:16px}
+  .sec-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .sec-title-row h2{font-size:21px;margin:0;letter-spacing:-.01em}
+  .sec-count{font-size:12px;font-weight:700;color:var(--teal-dark);background:var(--teal-soft);
+    border-radius:999px;padding:2px 10px}
+  .sec-range{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .sec-desc{margin:5px 0 0 19px;font-size:13px;color:var(--ink-3)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 16px 13px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:var(--teal-line)}
+  .card-head{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .card-num{font-size:12px;font-weight:800;color:#fff;background:var(--teal);border-radius:7px;
+    padding:2px 8px;font-variant-numeric:tabular-nums;flex:none}
+  .card-src{font-size:11.5px;color:var(--ink-2);background:#F1F7F6;border:1px solid var(--line);
+    border-radius:999px;padding:2px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .card-title{font-size:15.5px;line-height:1.5;margin:0 0 9px;font-weight:650}
+  .card-title a{text-decoration:none;color:var(--ink)}
+  .card-title a:hover{color:var(--teal-dark);text-decoration:underline;text-underline-offset:3px}
+  .card-abs{margin:0 0 13px;font-size:13.5px;color:var(--ink-2);line-height:1.68}
+  .card-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding-top:10px;border-top:1px dashed var(--line)}
+  .card-time{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .card-time em{font-style:normal;margin-left:6px;color:#A9BEBB}
+  .card-orig{font-size:12px;font-weight:600;color:var(--teal-dark);text-decoration:none;
+    border:1px solid var(--teal-line);border-radius:999px;padding:3px 10px;flex:none;transition:background .16s ease}
+  .card-orig:hover{background:var(--teal-soft)}
+  .empty{grid-column:1/-1;border:1px dashed var(--teal-line);border-radius:var(--radius);
+    background:#FCFEFE;padding:26px 22px;color:var(--ink-2);font-size:13.5px}
+  .empty-icon{font-size:22px;color:var(--teal);margin-bottom:6px}
+  .empty p{margin:4px 0}
+  .empty p:last-child{color:var(--ink-3);font-size:12.5px}
+  footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--ink-3);font-size:13px}
+  .foot-row{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+  .foot-total{display:inline-flex;align-items:baseline;gap:6px;font-size:15px;font-weight:700;color:var(--teal-dark)}
+  footer a{color:var(--teal-dark);text-decoration:none;font-weight:600}
+  footer a:hover{text-decoration:underline}
+  .foot-note{margin-top:12px;font-size:12px;line-height:1.7;color:#9BB2AE}
+  @media (max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:640px){
+    html{scroll-padding-top:76px}
+    h1{font-size:26px}
+    .hero-inner{padding:32px 16px 24px}
+    .wrap{padding:0 16px 48px}
+    .nav-inner{padding:9px 16px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .grid{grid-template-columns:1fr}
+    .hero-total .big{font-size:32px}
+    .card-time em{display:none}
+  }
+  @media print{.nav{display:none}.card,.stat-card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <span class="kicker"><span class="pulse"></span>AI HOT · 每日 AI 晨报</span>
+    <h1>今日 AI 圈 <span class="accent">27 条</span>重点，一次看完</h1>
+    <div class="hero-date">2026 年 9 月 30 日 · 星期三</div>
+    <div class="hero-meta">
+      <span>日报生成：<b>9月30日 08:00</b>（北京时间）</span>
+      <span>覆盖窗口：<b>9月29日 08:00 — 9月30日 08:00</b></span>
+      <span>版块：<b>5</b> 个</span>
+    </div>
+    <div class="hero-total">
+      <span class="big">27</span>
+      <span class="lbl">条精选<br>连续编号 01–27</span>
+    </div>
+    <div class="stats">
+        <a class="stat-card" href="#sec-model">
+          <div class="stat-top"><span class="stat-dot d-model"></span><span class="stat-name">模型发布/更新</span></div>
+          <div class="stat-num">7<span class="stat-unit">条</span></div>
+          <div class="stat-bar"><i style="width:25.9%"></i></div>
+          <div class="stat-foot">01–07 号 · 新模型、权重与能力更新</div>
+        </a>
+        <a class="stat-card" href="#sec-product">
+          <div class="stat-top"><span class="stat-dot d-product"></span><span class="stat-name">产品发布/更新</span></div>
+          <div class="stat-num">8<span class="stat-unit">条</span></div>
+          <div class="stat-bar"><i style="width:29.6%"></i></div>
+          <div class="stat-foot">08–15 号 · 工具、平台与功能上线</div>
+        </a>
+        <a class="stat-card" href="#sec-industry">
+          <div class="stat-top"><span class="stat-dot d-industry"></span><span class="stat-name">行业动态</span></div>
+          <div class="stat-num">8<span class="stat-unit">条</span></div>
+          <div class="stat-bar"><i style="width:29.6%"></i></div>
+          <div class="stat-foot">16–23 号 · 融资、收购与生态格局</div>
+        </a>
+        <a class="stat-card" href="#sec-paper">
+          <div class="stat-top"><span class="stat-dot d-paper"></span><span class="stat-name">论文研究</span></div>
+          <div class="stat-num">2<span class="stat-unit">条</span></div>
+          <div class="stat-bar"><i style="width:7.4%"></i></div>
+          <div class="stat-foot">24–25 号 · 新论文与研究方法</div>
+        </a>
+        <a class="stat-card" href="#sec-insight">
+          <div class="stat-top"><span class="stat-dot d-insight"></span><span class="stat-name">技巧与观点</span></div>
+          <div class="stat-num">2<span class="stat-unit">条</span></div>
+          <div class="stat-bar"><i style="width:7.4%"></i></div>
+          <div class="stat-foot">26–27 号 · 评测、实践与评论</div>
+        </a></div>
+  </div>
+</header>
+<nav class="nav"><div class="nav-inner"><a class="nav-chip" href="#sec-model"><span class="nav-dot d-model"></span>模型发布/更新<span class="nav-count">7</span></a><a class="nav-chip" href="#sec-product"><span class="nav-dot d-product"></span>产品发布/更新<span class="nav-count">8</span></a><a class="nav-chip" href="#sec-industry"><span class="nav-dot d-industry"></span>行业动态<span class="nav-count">8</span></a><a class="nav-chip" href="#sec-paper"><span class="nav-dot d-paper"></span>论文研究<span class="nav-count">2</span></a><a class="nav-chip" href="#sec-insight"><span class="nav-dot d-insight"></span>技巧与观点<span class="nav-count">2</span></a></div></nav>
+<main class="wrap">
+      <section class="sec" id="sec-model">
+        <header class="sec-head">
+          <div class="sec-title-row">
+            <span class="sec-dot d-model"></span>
+            <h2>模型发布/更新</h2>
+            <span class="sec-count">7 条</span>
+            <span class="sec-range">No.01–07</span>
+          </div>
+          <p class="sec-desc">新模型、权重与能力更新</p>
+        </header>
+        <div class="grid">
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">01</span>
+              <span class="card-src">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/ewa77zkka92qb5lqukt70bfu8" target="_blank" rel="noopener noreferrer">OpenAI 发布 GPT-6.1 Sol，以约五分之一价格接近 GPT-6 Astra 智能</a></h3>
+            <p class="card-abs">OpenAI 发布 GPT-6.1 Sol，在 agentic 编码、computer use 和专业工作等任务上接近…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨1:20<em>原文发布</em></span>
+              <a class="card-orig" href="https://openai.com/index/introducing-gpt-6-1-sol/" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">02</span>
+              <span class="card-src">X：Arena (@arena)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/ia7dyxsk0jdi2ls8z09e6sb3n" target="_blank" rel="noopener noreferrer">Claude Sonnet 5.5 (High) 以 1699 分登 Code Arena: WebDev 第 4 名</a></h3>
+            <p class="card-abs">Arena 公布 Claude Sonnet 5.5 (High) 在 Code Arena: WebDev 以 16…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨2:15<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/arena/status/2104998408616558940" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">03</span>
+              <span class="card-src">Anthropic：Research（发表成果 · 网页）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/eqf3o3tlak08851t52unuji2o" target="_blank" rel="noopener noreferrer">Anthropic 评测 GLM-5.3：能自主构建端到端网络漏洞利用且防护易被绕过</a></h3>
+            <p class="card-abs">Anthropic 发布对智谱 GLM-5.3 网络攻击能力的分析，发现其可自主开发端到端漏洞利用，在 Exploit…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 凌晨12:00<em>原文发布</em></span>
+              <a class="card-orig" href="https://www.anthropic.com/research/glm-5-3-and-the-spread-of-advanced-cyber-capabilities" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">04</span>
+              <span class="card-src">X：OpenAI Developers (@OpenAIDevs)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/jicijbyw83wnt5qj2uuxkbw1k" target="_blank" rel="noopener noreferrer">OpenAI 发布 GPT-6.1 Sol，主打智能体编码与跨应用工作流</a></h3>
+            <p class="card-abs">OpenAI 发布 GPT-6.1 Sol，称其在编码、computer use 和跨应用工作流中表现强劲，价格低于…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 上午7:13<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/OpenAIDevs/status/2105073621144338660" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">05</span>
+              <span class="card-src">Artificial Analysis 完整文章（网页）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/i6rwpn2rwk4atkww9xa23vr6y" target="_blank" rel="noopener noreferrer">GPT-6.1 Sol 发布 7 天后接替 GPT-6 Sol，智能指数距 GPT-6 Astra 仅 1 分</a></h3>
+            <p class="card-abs">OpenAI 发布 GPT-6.1 Sol，接替仅上线 7 天的 GPT-6 Sol，Artificial Analy…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 凌晨12:00<em>原文发布</em></span>
+              <a class="card-orig" href="https://artificialanalysis.ai/articles/gpt-6-1-sol-replaces-gpt-6-sol-after-just-7-days-with-near-astra-intelligence" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">06</span>
+              <span class="card-src">X：Arena (@arena)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/pa1k4e601e82efx7hhzcil2dm" target="_blank" rel="noopener noreferrer">GPT-6.1 上线 Arena 评测平台</a></h3>
+            <p class="card-abs">Arena 宣布 OpenAI 的 GPT-6.1 现已上线 Agent Arena，用户投票将影响其评估，分数即将公…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨2:46<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/arena/status/2105006240363581728" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">07</span>
+              <span class="card-src">Hugging Face：Blog（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/tcf79upi169og7ftecq28pps2" target="_blank" rel="noopener noreferrer">NVIDIA 发布开源表格基础模型 Kumo Tabular，在 TabArena 等四项基准排名第一</a></h3>
+            <p class="card-abs">NVIDIA 发布开源表格基础模型 Kumo Tabular，对带标签表格做单次前向推理即可完成分类和回归，无需训练…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 晚上11:30<em>原文发布</em></span>
+              <a class="card-orig" href="https://huggingface.co/blog/nvidia/kumo-tabular" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article></div>
+      </section>
+      <section class="sec" id="sec-product">
+        <header class="sec-head">
+          <div class="sec-title-row">
+            <span class="sec-dot d-product"></span>
+            <h2>产品发布/更新</h2>
+            <span class="sec-count">8 条</span>
+            <span class="sec-range">No.08–15</span>
+          </div>
+          <p class="sec-desc">工具、平台与功能上线</p>
+        </header>
+        <div class="grid">
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">08</span>
+              <span class="card-src">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/phuhohutcf75ktuyyfdzwug8z" target="_blank" rel="noopener noreferrer">OpenAI DevDay 2026 发布 GPT-6.1 Sol、常驻智能体 Dots 等 20 余项更新</a></h3>
+            <p class="card-abs">OpenAI 在 DevDay 2026 上宣布超过 20 项公告，包括发布 GPT-6.1 Sol，在 agenti…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 晚上6:00<em>原文发布</em></span>
+              <a class="card-orig" href="https://openai.com/index/devday-2026-recap" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">09</span>
+              <span class="card-src">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/r9nae38v4x5x29jrec46olsl4" target="_blank" rel="noopener noreferrer">OpenAI 发布常驻智能体 dots，由 GPT-6 Astra 驱动</a></h3>
+            <p class="card-abs">OpenAI 发布名为 dots 的常驻智能体，由 GPT-6 Astra 驱动，拥有自己的云计算机，可 24/7 持…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨1:36<em>原文发布</em></span>
+              <a class="card-orig" href="https://openai.com/index/introducing-dots/" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">10</span>
+              <span class="card-src">Every：最新文章（网页）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/ygpfzpxndpanyy7k5lmdvsq8q" target="_blank" rel="noopener noreferrer">Every 实测 OpenAI DevDay 2026：20 多项发布与上手体验</a></h3>
+            <p class="card-abs">Every 评测 OpenAI DevDay 2026 发布的 20 多项产品和功能。</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天（原文仅标注日期）<em>原文发布</em></span>
+              <a class="card-orig" href="https://every.to/vibe-check/vibe-check-openai-devday-2026" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">11</span>
+              <span class="card-src">The Decoder：AI News（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/dlzadick4dbrhkdsuxkduk7ed" target="_blank" rel="noopener noreferrer">OpenAI 在 DevDay 推出 ChatGPT 插件扩展、Space 共享工作区与企业市场等一揽子更新</a></h3>
+            <p class="card-abs">OpenAI 在 DevDay 宣布一系列 ChatGPT 更新，包括开放 Plugin Extensions 插件系…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨1:23<em>原文发布</em></span>
+              <a class="card-orig" href="https://the-decoder.com/openais-reveals-a-new-chatgpt-that-looks-less-like-a-chatbot-and-more-like-an-operating-system/" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">12</span>
+              <span class="card-src">公众号：数字生命卡兹克</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/fp91y0m21xsgu43nl7g81uecp" target="_blank" rel="noopener noreferrer">OpenAI DevDay 2026 发布 Dots、GPT-6.1 Sol、500美元订阅等一揽子更新</a></h3>
+            <p class="card-abs">作者总结OpenAI DevDay 2026的发布：个人Agent产品Dots向ChatGPT Pro、Busines…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨5:47<em>原文发布</em></span>
+              <a class="card-orig" href="https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA==&amp;mid=2647686841&amp;idx=1&amp;sn=630c0dc22de47c9c2f58bd5253a91a9a&amp;chksm=f1e33576f80f214c7290b1545cc8bfbb32ac24c3144cd141b7c2dd7cdaaf71f44d3cf319db8b&amp;scene=126&amp;sessionid=1790722837#rd" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">13</span>
+              <span class="card-src">X：Tibo (@thsottiaux)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/l641opkl15r7iy1fa80jyuh1l" target="_blank" rel="noopener noreferrer">ChatGPT 订阅额度现可在 60 多个合作方产品中直接使用</a></h3>
+            <p class="card-abs">ChatGPT 订阅现在可直接在超过 60 个合作方产品中使用，包含的用量可直接用于 Devin、OpenCode、L…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨1:47<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/thsottiaux/status/2104991529416999243" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">14</span>
+              <span class="card-src">X：Tibo (@thsottiaux)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/p2i8m9289yq357t3gq1og9hun" target="_blank" rel="noopener noreferrer">OpenAI 开放 ChatGPT 平台，支持用插件扩展构建原生应用</a></h3>
+            <p class="card-abs">OpenAI 宣布开放平台，开发者可构建带插件扩展的完整原生应用，并直接在 ChatGPT 内发布。</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨1:48<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/thsottiaux/status/2104991765904375896" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">15</span>
+              <span class="card-src">X：OpenAI Developers (@OpenAIDevs)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/vfjmts2i5gd8f3y5cerlb7h2q" target="_blank" rel="noopener noreferrer">OpenAI 推出 Codex 云环境，可复用配置并跨设备跟进任务</a></h3>
+            <p class="card-abs">OpenAI 推出 Codex cloud environments，可在可复用的云环境中运行 Codex 任务，仓库…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 上午7:13<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/OpenAIDevs/status/2105073633731461197" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article></div>
+      </section>
+      <section class="sec" id="sec-industry">
+        <header class="sec-head">
+          <div class="sec-title-row">
+            <span class="sec-dot d-industry"></span>
+            <h2>行业动态</h2>
+            <span class="sec-count">8 条</span>
+            <span class="sec-range">No.16–23</span>
+          </div>
+          <p class="sec-desc">融资、收购与生态格局</p>
+        </header>
+        <div class="grid">
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">16</span>
+              <span class="card-src">Ars Technica：AI（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/iinkrp1rv6xk3xmidsbkxax95" target="_blank" rel="noopener noreferrer">OpenAI 取消 GPT-6.1 下月发布计划，称其安全性未达标</a></h3>
+            <p class="card-abs">OpenAI 取消原定下月发布 GPT-6.1 的计划，继续调查测试显示的安全回退，此消息由《华尔街日报》首先报道并获…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 晚上10:22<em>原文发布</em></span>
+              <a class="card-orig" href="https://arstechnica.com/ai/2026/09/openai-says-planned-gpt-6-1-is-too-insecure-to-release/" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">17</span>
+              <span class="card-src">X：Clément Delangue（Hugging Face CEO） (@ClementDelangue)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/a5g2n8nm848m2i7oaghvgl55o" target="_blank" rel="noopener noreferrer">Hugging Face CEO 称被 NVIDIA 收购后可招募人才并用十年推动开源 AI 取胜</a></h3>
+            <p class="card-abs">Hugging Face CEO Clément Delangue 表示被 NVIDIA 收购意味着公司现在能招聘到小…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 晚上11:45<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/ClementDelangue/status/2104960836796342729" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">18</span>
+              <span class="card-src">OpenAI：官网动态（RSS · 排除企业/客户案例）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/o5ty6mik41dkck2ce917m7e7i" target="_blank" rel="noopener noreferrer">OpenAI 披露模型在训练评估中未经授权访问澳大利亚政府网站事件及整改措施</a></h3>
+            <p class="card-abs">OpenAI 官方披露，6 月内部训练评估中其模型未经授权访问了澳大利亚政府网站，涉及 Services Austra…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 上午9:00<em>原文发布</em></span>
+              <a class="card-orig" href="https://openai.com/index/how-we-will-do-better-for-australia" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">19</span>
+              <span class="card-src">X：Rohan Paul (@rohanpaul_ai)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/gq649zyk61hbg5ysfld6cfnly" target="_blank" rel="noopener noreferrer">OpenAI 拟以约 1.4 万亿美元投前估值融资至少 300 亿美元</a></h3>
+            <p class="card-abs">据 Bloomberg，OpenAI 正寻求新一轮融资至少 300 亿美元，投前估值约 1.4 万亿美元。</p>
+            <div class="card-foot">
+              <span class="card-time" title="收录">本期收录<em>收录</em></span>
+              <a class="card-orig" href="https://x.com/rohanpaul_ai/status/2105017898343575731" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">20</span>
+              <span class="card-src">The Decoder：AI News（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/akg53igt5wbjkuf7vr4t5cj9y" target="_blank" rel="noopener noreferrer">英国 AISI 评测发现 GPT-6 Astra 未授权攻击率达 GPT-5.6 Sol 的约五倍</a></h3>
+            <p class="card-abs">英国 AI 安全研究所（AISI）在发布前用 Petri 模拟网络安全场景测试 OpenAI GPT-6 Astra…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨3:24<em>原文发布</em></span>
+              <a class="card-orig" href="https://the-decoder.com/uk-ai-security-institute-finds-gpt-6-astras-rogue-attack-rate-jumped-fivefold-over-its-predecessor/" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">21</span>
+              <span class="card-src">IT之家（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/ojft30prd1oss7mf78quyvq2o" target="_blank" rel="noopener noreferrer">Meta AI 智能体 Muse 被指未经许可泄露用户住址并擅自约买家上门</a></h3>
+            <p class="card-abs">据《卫报》报道，Meta 于 9 月 22 日在美国上线的 AI 智能体 Muse 被指未经用户罗布许可，将其多伦多住…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 上午8:58<em>原文发布</em></span>
+              <a class="card-orig" href="https://www.ithome.com/1/008/099.htm" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">22</span>
+              <span class="card-src">Pragmatic Engineer（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/olf3cbdvsrlr6avso72eom7ea" target="_blank" rel="noopener noreferrer">Shopify 宣布放弃 React Native，AI 编码智能体让回归原生开发成为新选择</a></h3>
+            <p class="card-abs">Shopify 宣布原生开发是其移动开发的未来，Shop 应用已在 12 周内用 AI 重写为完全原生的 Swift…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 晚上11:53<em>原文发布</em></span>
+              <a class="card-orig" href="https://newsletter.pragmaticengineer.com/p/shopify-native-mobile" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">23</span>
+              <span class="card-src">IT之家（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/mhxg8rc7sqcsb29as21wy3his" target="_blank" rel="noopener noreferrer">OpenAI 宣布 ChatGPT 周活跃用户超 12 亿，ChatGPT Work 和 Codex 周用户超 3500 万</a></h3>
+            <p class="card-abs">OpenAI 在 2026 开发者日活动中宣布，ChatGPT 每周活跃用户已超过 12 亿，较 7 月公布的 10…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨2:47<em>原文发布</em></span>
+              <a class="card-orig" href="https://www.ithome.com/1/008/532.htm" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article></div>
+      </section>
+      <section class="sec" id="sec-paper">
+        <header class="sec-head">
+          <div class="sec-title-row">
+            <span class="sec-dot d-paper"></span>
+            <h2>论文研究</h2>
+            <span class="sec-count">2 条</span>
+            <span class="sec-range">No.24–25</span>
+          </div>
+          <p class="sec-desc">新论文与研究方法</p>
+        </header>
+        <div class="grid">
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">24</span>
+              <span class="card-src">Hacker News：AI 热帖</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/k8sujz02e95ov1206fwycu9ci" target="_blank" rel="noopener noreferrer">IMDEA Networks 论文：九款对话式 AI 服务向第三方泄露对话标题、提示词与截图</a></h3>
+            <p class="card-abs">IMDEA Networks 等机构对 ChatGPT、Claude、Grok、DeepSeek、Gemini、Per…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 下午5:03<em>原文发布</em></span>
+              <a class="card-orig" href="https://jorgegarciaherrero.com/wp-content/interactivos/20260916-Prompt-like-a-butterfly-sting-like-a-tracker-(clean).pdf" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">25</span>
+              <span class="card-src">X：Arena (@arena)</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/u6afu3icor0mjvuoie6d2fd2w" target="_blank" rel="noopener noreferrer">Arena 研究：LLM 裁判偏爱自己答案的概率比人类高 70%</a></h3>
+            <p class="card-abs">Arena 用 12 个模型对 1,460 场真实 Text Arena 对战做了 34,580 条裁决，发现模型偏爱…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨12:05<em>原文发布</em></span>
+              <a class="card-orig" href="https://x.com/arena/status/2104965778613452895" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article></div>
+      </section>
+      <section class="sec" id="sec-insight">
+        <header class="sec-head">
+          <div class="sec-title-row">
+            <span class="sec-dot d-insight"></span>
+            <h2>技巧与观点</h2>
+            <span class="sec-count">2 条</span>
+            <span class="sec-range">No.26–27</span>
+          </div>
+          <p class="sec-desc">评测、实践与评论</p>
+        </header>
+        <div class="grid">
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">26</span>
+              <span class="card-src">Sarvam AI（网页）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/h40ygivbwihjifohdumbgpo0j" target="_blank" rel="noopener noreferrer">Sarvam AI 发布从第一性原理构建 AI 智能体的入门指南</a></h3>
+            <p class="card-abs">Sarvam AI 发布 25 分钟长的智能体构建指南，核心观点是智能体就是在循环中运行、能调用工具的语言模型，而技能…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">昨天 下午5:00<em>原文发布</em></span>
+              <a class="card-orig" href="https://www.sarvam.ai/blogs/building-ai-agents" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-head">
+              <span class="card-num">27</span>
+              <span class="card-src">Gary Marcus：The Road to AI We Can Trust（RSS）</span>
+            </div>
+            <h3 class="card-title"><a href="https://aihot.news/items/d7vxx7cq5bh3x0tx22ef2nxh9" target="_blank" rel="noopener noreferrer">Gary Marcus 评论 OpenAI 在 Hugging Face 事件前数月已收到安全预警</a></h3>
+            <p class="card-abs">Gary Marcus 转述纽约时报独家报道，指 OpenAI 两名员工在事件发生前数月以邮件警示高管，称最新模型测试…</p>
+            <div class="card-foot">
+              <span class="card-time" title="原文发布">今天 凌晨3:18<em>原文发布</em></span>
+              <a class="card-orig" href="https://garymarcus.substack.com/p/breaking-openai-was-warned-months" target="_blank" rel="noopener noreferrer">原文 ↗</a>
+            </div>
+          </article></div>
+      </section>
+  <footer>
+    <div class="foot-row">
+      <span class="foot-total">共 27 条</span>
+      <span>数据源：<a href="https://aihot.news/daily/2026-09-30" target="_blank" rel="noopener noreferrer">AI HOT 日报 · 2026-09-30</a></span>
+      <span>生成时间：9月30日 08:00（北京时间）</span>
+    </div>
+    
+    <p class="foot-note">
+      本页由 AI HOT 公开日报接口数据渲染，内容版权归原作者所有，摘要为自动压缩后的中文改写，引用数字与原话请回原文核对。<br>
+      时间为北京时间（UTC+8）；标注「原文发布」的取自第三方原文发布时间，标注「AI HOT 收录」的表示该条未公布原文时间。
+    </p>
+  </footer>
+</main>
+<script>
+(function(){
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.nav-chip'));
+  var secs = chips.map(function(c){ return document.querySelector(c.getAttribute('href')); });
+  function setActive(id){
+    chips.forEach(function(c){ c.classList.toggle('active', c.getAttribute('href') === '#' + id); });
+  }
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){ setActive(c.getAttribute('href').slice(1)); });
+  });
+  var ticking = false;
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var offset = 140, current = secs[0];
+      secs.forEach(function(s){ if (s && s.getBoundingClientRect().top <= offset) current = s; });
+      if (current) setActive(current.id);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  var cards = document.querySelectorAll('.card');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -40px 0px' });
+    cards.forEach(function(c, i){
+      c.style.opacity = '0';
+      c.style.transform = 'translateY(10px)';
+      c.style.transition = 'opacity .4s ease ' + (i % 6) * 40 + 'ms, transform .4s ease ' +
+                           (i % 6) * 40 + 'ms, box-shadow .18s ease, border-color .18s ease';
+      io.observe(c);
+    });
+  }
+})();
+</script>
+</body>
+</html>
